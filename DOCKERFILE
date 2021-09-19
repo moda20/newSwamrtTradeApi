@@ -1,0 +1,14 @@
+FROM node:lts
+#RUN apt-get update && apt-get install -y \
+#    vim \
+#    git
+WORKDIR /home/node/app
+RUN mkdir -p /home/node/app/upload
+COPY package.json ./
+COPY . .
+COPY .env /home/node/app/.env
+RUN npm install
+RUN npm install -g nodemon
+
+EXPOSE 3000
+CMD ["nodemon"]
