@@ -8,6 +8,8 @@ var logger = require('morgan');
 const errorMiddleware = require('./middlewares/errorHandler');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
+require('./utils/logEventBuffer').readBuffer()
+
 
 var app = express();
 app.use(require('cors')());

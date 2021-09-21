@@ -41,6 +41,11 @@ class DataStore{
         this.ownerPassword = OwnerPassword
     }
 
+
+    setToStore(name, data){
+        this[name] = data;
+    }
+
     _getAbiUrlFromName(name){
         switch(name){
             case "erc20":{
@@ -58,11 +63,13 @@ class DataStore{
             case "WBNB":{
                 return __dirname + '/../abis/WBNB.json'
             }
+            case "PSP":{
+                return __dirname + '/../abis/pancakePair.json'
+            }
         }
     }
 
     readAbi = (file = '') =>{
-        console.log();
         return JSON.parse(fs.readFileSync(this._getAbiUrlFromName(file)).toString())
     }
 

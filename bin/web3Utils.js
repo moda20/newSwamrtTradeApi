@@ -1,5 +1,6 @@
 const Web3 =require('web3');
 const store = require('../utils/dataStore');
+const logDecoder = require('../utils/logDecoder');
 
 class web3Utils{
 
@@ -67,7 +68,18 @@ class web3Utils{
         //let receipt = await this.web3.eth.getTransactionReceipt(txHash);
         let receipt = txHash;
 
+        try{
+            receipt.logs = Object.values(receipt?.events)?.map((e)=>{
+                return {
+                    ...e,
+                    ['decodedLogs'] : logDecoder.decodeSingleLog(e, this.web3)
+                }
+            })
 
+            delete  receipt?.events;
+        }catch (e){
+            console.log(e);
+        }
 
         return {
             receipt,
