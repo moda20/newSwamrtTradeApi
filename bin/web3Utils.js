@@ -72,7 +72,9 @@ class web3Utils{
             receipt.logs = Object.values(receipt?.events)?.map((e)=>{
                 return {
                     ...e,
-                    ['decodedLogs'] : logDecoder.decodeSingleLog(e, this.web3)
+                    ['decodedLogs'] : logDecoder.decodeSingleLog(e, this.web3),
+                    ['eventName']: logDecoder.getEventName(e),
+                    raw: undefined
                 }
             })
 
