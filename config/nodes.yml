@@ -1,0 +1,4 @@
+rpcNodes:
+  - http://localhost:8557
+  - http://localhost:8556
+  - http://localhost:8558

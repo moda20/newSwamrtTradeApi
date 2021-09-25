@@ -16,6 +16,7 @@ class DataStore{
         this.WBNBAddress = process.env.WBNB_CONTRACT_ADDRESS
         this.ownerAddress = process.env.OWNER_ACCOUNT_ACCOUNT
         this.ownerPassword = process.env.OWNER_ACCOUNT_PRIVATE_KEY_PASSWORD;
+        this.abis = {};
         return instance;
     }
 
@@ -70,7 +71,9 @@ class DataStore{
     }
 
     readAbi = (file = '') =>{
-        return JSON.parse(fs.readFileSync(this._getAbiUrlFromName(file)).toString())
+        if(!this.abis[file]) this.abis[file] = JSON.parse(fs.readFileSync(this._getAbiUrlFromName(file)).toString());
+        return this.abis[file];
+
     }
 
 }

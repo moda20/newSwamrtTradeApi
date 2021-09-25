@@ -1,0 +1,46 @@
+version: "3.6"
+services:
+  nodeapi:
+    build:
+      context: ./
+      dockerfile: DOCKERFILE
+    container_name: nodeapi
+    restart: unless-stopped
+    ports:
+      - 3002:5000
+    volumes:
+      - ./:/home/node/app/
+
+  drynode_1:
+    build:
+      context: ./
+      dockerfile: LocalDryNetworkDockerfile
+      args:
+        - "SOURCE_CHAIN_RPC_ENDPOINT='https://speedy-nodes-nyc.moralis.io/9b93e2df8d3932a28ee2b3a4/bsc/mainnet/archive'"
+        - "ACCOUNT_TO_UNLOCK=0x90F8bf6A479f320ead074411a4B0e7944Ea8c9C1"
+    container_name: drynode_1
+    restart: unless-stopped
+    ports:
+      - 8558:8545
+  drynode_2:
+    build:
+      context: ./
+      dockerfile: LocalDryNetworkDockerfile
+      args:
+        - "SOURCE_CHAIN_RPC_ENDPOINT='https://speedy-nodes-nyc.moralis.io/9b93e2df8d3932a28ee2b3a4/bsc/mainnet/archive'"
+        - "ACCOUNT_TO_UNLOCK=0x90F8bf6A479f320ead074411a4B0e7944Ea8c9C1"
+    container_name: drynode_2
+    restart: unless-stopped
+    ports:
+      - 8556:8545
+  drynode_3:
+    build:
+      context: ./
+      dockerfile: LocalDryNetworkDockerfile
+      args:
+        - "SOURCE_CHAIN_RPC_ENDPOINT='https://speedy-nodes-nyc.moralis.io/9b93e2df8d3932a28ee2b3a4/bsc/mainnet/archive'"
+        - "ACCOUNT_TO_UNLOCK=0x90F8bf6A479f320ead074411a4B0e7944Ea8c9C1"
+    container_name: drynode_3
+    restart: unless-stopped
+    ports:
+      - 8557:8545

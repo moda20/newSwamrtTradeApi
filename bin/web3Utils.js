@@ -1,6 +1,8 @@
 const Web3 =require('web3');
 const store = require('../utils/dataStore');
 const logDecoder = require('../utils/logDecoder');
+const endpointResolver = require('../bin/endpointResolver');
+
 
 class web3Utils{
 
@@ -13,9 +15,9 @@ class web3Utils{
     reloadWeb3AndContracts(){
 
         this.smartTradecontractAddress = store.smartTradeContractAddress;
-        this.web3 = new Web3(new Web3.providers.HttpProvider(store.provider));
+        this.provider = endpointResolver.getEndpoint();
+        this.web3 = new Web3(new Web3.providers.HttpProvider(this.provider));
         this.PSRouterContract = new this.web3.eth.Contract(store.readAbi('PSR'), store.PancakeSwapRouterContractAddress, {gas: 20000000000});
-
     }
 
     CHK(address){
@@ -46,6 +48,9 @@ class web3Utils{
             withFees = false
         }
       ){
+
+        this.reloadWeb3AndContracts()
+
         if(path?.length === 0) throw new Error('Empty Path given');
 
         const realDeadline = Math.ceil((new Date().getTime())/ 1000) + deadline;
@@ -92,13 +97,17 @@ class web3Utils{
                 withFees,
                 owner,
                 deadline: realDeadline,
-                gasPrice: await this.web3.eth.getGasPrice()
+                gasPrice: await this.web3.eth.getGasPrice(),
+                provider: this.provider
             }
         }
     }
 
 
     async depositWBNB({amount, owner}){
+
+        this.reloadWeb3AndContracts()
+
         let tokenContract = new this.web3.eth.Contract(store.readAbi('WBNB'), store.WBNBAddress);
         //deposit
         let txHash = await tokenContract.methods.deposit().send({
@@ -112,7 +121,8 @@ class web3Utils{
             input:{
                 amount: amount,
                 owner,
-                gasPrice: await this.web3.eth.getGasPrice()
+                gasPrice: await this.web3.eth.getGasPrice(),
+                provider: this.provider
             }
         }
     }

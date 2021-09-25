@@ -18,6 +18,7 @@ module.exports= async (err, req, res, next)=>{
         "error": err.message,
         receipt: err.receipt,
         status: status,
+        extraData: err.providerData,
         EVMError: EVMError ?? 'No error message found'
     })
 }

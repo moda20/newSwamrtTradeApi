@@ -23,6 +23,9 @@ module.exports = function (router) {
 
             next();
         }catch (err){
+            err['providerData']={
+                provider : web3Utils.provider
+            }
             next(err)
         }
     }, middlewares.closeAccount);

@@ -13,7 +13,7 @@ module.exports = {
 
         Object.keys(decoded).forEach((e)=>{
             if(getType(e)?.type === 'address'){
-                decoded[`${e}Name`] = store.nameList[decoded[e]]?.name;
+                decoded[`${e}Name`] = store.nameList?.[decoded[e]]?.name;
             }
         })
         return decoded;
