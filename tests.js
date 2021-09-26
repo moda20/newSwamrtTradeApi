@@ -24,7 +24,7 @@ let paths = [
     "0xBf3D5083fE56A126d76Ec9b963AFfed03082A539",
     "0xF3c80F567b9070358f2298BfcdC88276C257491E",
     "0xd0A6CDb029c2240a1e7F9352Aa1E8d2e85E81bB3",
-    /*"0xf3402AD90b3229b204B5AD74Cb19363789844f6d",
+    "0xf3402AD90b3229b204B5AD74Cb19363789844f6d",
     "0xf9eFFb60f85d6F4c4E54FDF5072A586cdc01640C",
     "0xBda320ef30a21a3E260685C4080d0940a8ce270B",
     "0xF5D1895A6cF383694BEE772F9FDdC765E8026597",
@@ -466,7 +466,7 @@ let paths = [
     "0xFAC677c7De4C8B130FCf3367ea534F28D2756218",
     "0xDAEAaa36C2eF31012A30C4a872f8c97bc649D61c",
     "0xe0A6E4f441506Af289c91ae5858b6855C416f550",
-    "0xc3322aE8661d4462741Fb8AeA46a81C75f7750e7"*/
+    "0xc3322aE8661d4462741Fb8AeA46a81C75f7750e7"
 ]
 
 
@@ -508,7 +508,7 @@ const computeProviderScores = (repeats) => {
     }, {})
 }
 
-const computeSingleSwaps = (Prefix, start, step = 2 , newPaths)=>{
+const computeSingleSwaps = (Prefix, start, step = 2 , newPaths, provider)=>{
     let promise = Promise.resolve();
     let nextPaths = newPaths ?? paths;
     if(nextPaths.length === 0) return ;
@@ -518,7 +518,7 @@ const computeSingleSwaps = (Prefix, start, step = 2 , newPaths)=>{
         repeats: 0
     })
     for (let i = start; i < nextPaths.length; i+=step) {
-        promise = promise.then(()=>singleSwap([WBNBAddress, nextPaths[i]], Prefix).then((x)=>{
+        promise = promise.then(()=>singleSwap([WBNBAddress, nextPaths[i]], Prefix, provider).then((x)=>{
             totalTime += (parseInt(x.duration ?? 0))
             console.log(x.duration);
         })).catch((e)=>{
@@ -549,13 +549,14 @@ const computeSingleSwaps = (Prefix, start, step = 2 , newPaths)=>{
 
 
 
-const singleSwap = (path, Prefix) =>{
+const singleSwap = (path, Prefix, provider) =>{
     singleNumber++;
     return axios.post(getUrl(singleNumber), {
         "amount":200,
         "path":path,
         "minimumAmountOut":1,
         "withFees": true,
+        "provider": provider
     }).then((response)=>{
         console.log(`${Prefix} => ${response.data?.input?.provider} : swap between ${path[0]} and token ${path[1]} timing : ${response.duration}`);
         if(repeats[path[0]]){
@@ -584,7 +585,7 @@ const singleSwap = (path, Prefix) =>{
 
 
 
-computeSingleSwaps("T ONE", 0, 2);
-computeSingleSwaps("T TWO", 1, 2);
+computeSingleSwaps("T ONE", 0, 2, null, 0);
+computeSingleSwaps("T TWO", 1, 2, null, 1);
 /*computeSingleSwaps("T THREE");
 computeSingleSwaps("T FOUR");*/

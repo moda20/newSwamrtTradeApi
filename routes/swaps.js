@@ -8,7 +8,6 @@ module.exports = function (router) {
             const {minimumAmountOut, amount, path, withFees, owner, deadline, toAddress} = req.body;
             const {address} = res.locals.openUser;
 
-
             let transactionData = await web3Utils.swapBetween({
                 minimumAmountOut: minimumAmountOut ?? 0,
                 amountIn: amount ?? 0,
@@ -16,7 +15,8 @@ module.exports = function (router) {
                 deadline : deadline ?? 5000,
                 path: path ?? [],
                 toAddress: toAddress ?? owner ?? address,
-                withFees: withFees ?? false
+                withFees: withFees ?? false,
+                provider : res.newProvider
             })
 
             res.status(200).json(transactionData);
@@ -24,7 +24,7 @@ module.exports = function (router) {
             next();
         }catch (err){
             err['providerData']={
-                provider : web3Utils.provider
+                provider : res.newProvider.provider
             }
             next(err)
         }
@@ -39,6 +39,7 @@ module.exports = function (router) {
             let transactionData = await web3Utils.depositWBNB({
                 amount: amount ?? 0,
                 owner: owner ?? address,
+                provider: res.newProvider
             })
 
             res.status(200).json(transactionData);
@@ -57,6 +58,7 @@ module.exports = function (router) {
             let transactionData = await web3Utils.getBalanceOfToken({
                 tokenList: tokens ?? [],
                 owner: owner ?? address,
+                provider: res.newProvider
             })
 
             res.status(200).json(transactionData);

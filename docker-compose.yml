@@ -44,3 +44,47 @@ services:
     restart: unless-stopped
     ports:
       - 8557:8545
+  drynode_4:
+    build:
+      context: ./
+      dockerfile: LocalDryNetworkDockerfile
+      args:
+        - "SOURCE_CHAIN_RPC_ENDPOINT='https://speedy-nodes-nyc.moralis.io/9b93e2df8d3932a28ee2b3a4/bsc/mainnet/archive'"
+        - "ACCOUNT_TO_UNLOCK=0x90F8bf6A479f320ead074411a4B0e7944Ea8c9C1"
+    container_name: drynode_4
+    restart: unless-stopped
+    ports:
+      - 8560:8545
+  drynode_5:
+    build:
+      context: ./
+      dockerfile: LocalDryNetworkDockerfile
+      args:
+        - "SOURCE_CHAIN_RPC_ENDPOINT='https://speedy-nodes-nyc.moralis.io/9b93e2df8d3932a28ee2b3a4/bsc/mainnet/archive'"
+        - "ACCOUNT_TO_UNLOCK=0x90F8bf6A479f320ead074411a4B0e7944Ea8c9C1"
+    container_name: drynode_5
+    restart: unless-stopped
+    ports:
+      - 8561:8545
+  drynode_6:
+    build:
+      context: ./
+      dockerfile: LocalDryNetworkDockerfile
+      args:
+        - "SOURCE_CHAIN_RPC_ENDPOINT='https://speedy-nodes-nyc.moralis.io/9b93e2df8d3932a28ee2b3a4/bsc/mainnet/archive'"
+        - "ACCOUNT_TO_UNLOCK=0x90F8bf6A479f320ead074411a4B0e7944Ea8c9C1"
+    container_name: drynode_6
+    restart: unless-stopped
+    ports:
+      - 8562:8545
+  drynode_7:
+    build:
+      context: ./
+      dockerfile: LocalDryNetworkDockerfile
+      args:
+        - "SOURCE_CHAIN_RPC_ENDPOINT='https://speedy-nodes-nyc.moralis.io/9b93e2df8d3932a28ee2b3a4/bsc/mainnet/archive'"
+        - "ACCOUNT_TO_UNLOCK=0x90F8bf6A479f320ead074411a4B0e7944Ea8c9C1"
+    container_name: drynode_7
+    restart: unless-stopped
+    ports:
+      - 8563:8545

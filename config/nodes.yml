@@ -2,3 +2,7 @@ rpcNodes:
   - http://localhost:8557
   - http://localhost:8556
   - http://localhost:8558
+  - http://localhost:8560
+  - http://localhost:8561
+  - http://localhost:8562
+  - http://localhost:8563
