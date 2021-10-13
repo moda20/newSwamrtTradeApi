@@ -4,7 +4,7 @@ const fs   = require('fs');
 class EndpointResolver {
     static latestEndpoint;
     static currentNumber = 0;
-
+    static execNodes = {};
     static allNodes = []
 
     static readNodes(){
@@ -24,6 +24,12 @@ class EndpointResolver {
         console.log(allNodes[this.currentNumber%(allNodes.length)]);
         console.log(allNodes);
         return allNodes[this.currentNumber%(allNodes.length)]
+    }
+
+    static getExecNodes = () => {
+        const doc = yaml.load(fs.readFileSync(__dirname+"/../config/nodes.yml", 'utf8'));
+        this.execNodes = doc?.exec_node;
+        return this.execNodes;
     }
 }
 

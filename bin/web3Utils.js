@@ -8,10 +8,26 @@ class web3Utils{
 
     multipleEndpoints= [];
     currentEndpointNumber = -1;
-    inUserProviders = {}
+    inUserProviders = {};
+    execEndpoint={}
     constructor() {
         this.populateWeb3Endpoints();
         this.reloadWeb3AndContracts();
+        this.populateExecEndpoint();
+    }
+
+    populateExecEndpoint(){
+        try{
+            let execProvider = endpointResolver.getExecNodes().mainNet;
+            let newWeb3 = new Web3(new Web3.providers.HttpProvider(execProvider));
+            this.execEndpoint = {
+                provider: execProvider,
+                web3 : newWeb3,
+                PSRouterContract: new newWeb3.eth.Contract(store.readAbi('PSR'), store.PancakeSwapRouterContractAddress, {gas: 20000000000})
+            }
+        }catch(e){
+            console.log(e);
+        }
     }
 
     populateWeb3Endpoints(){
@@ -34,7 +50,7 @@ class web3Utils{
     }
 
     CHK(address){
-        return this.web3.utils.toChecksumAddress(address);
+        return this.execEndpoint?.web3?.utils.toChecksumAddress(address) ?? address;
     }
 
 

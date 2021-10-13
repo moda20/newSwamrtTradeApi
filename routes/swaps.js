@@ -68,4 +68,29 @@ module.exports = function (router) {
             next(err)
         }
     }, middlewares.closeAccount)
+
+    router.post('/getAmountsOut', middlewares.getProvider, async (req, res, next)=>{
+        try{
+            const {amountIn, path} = req.body;
+            if(!web3Utils.execEndpoint?.PSRouterContract) res.status(500).json({error:"Endpoint Not Found"})
+            let transactionData = await (req.body.provider ? res.newProvider :web3Utils.execEndpoint?.PSRouterContract).methods.getAmountsOut(amountIn ?? 0, (path ?? []).map(e=>web3Utils.CHK(e)))
+                .call();
+
+            return res.status(200).json(transactionData);
+        }catch (err){
+            next(err)
+        }
+    })
+    router.post('/getAmountsIn', middlewares.getProvider, async (req, res, next)=>{
+        try{
+            const {amountOut, path} = req.body;
+            if(!web3Utils.execEndpoint?.PSRouterContract) res.status(500).json({error:"Endpoint Not Found"})
+            let transactionData = await (req.body.provider ? res.newProvider :web3Utils.execEndpoint?.PSRouterContract).methods.getAmountsIn(amountOut ?? 0, (path ?? []).map(e=>web3Utils.CHK(e)))
+                .call();
+
+            return res.status(200).json(transactionData);
+        }catch (err){
+            next(err)
+        }
+    })
 };
