@@ -1,6 +1,6 @@
 const web3Utils = require('../bin/web3Utils');
 const middlewares = require('../middlewares/accountMiddleware');
-
+const tokenControllers = require('../controllers/tokenController');
 
 module.exports = function (router) {
     router.post('/SingleSwap', middlewares.openAccount, async (req, res, next)=>{
@@ -93,4 +93,7 @@ module.exports = function (router) {
             next(err)
         }
     })
+
+
+    router.post('/reserves', tokenControllers.readReserves);
 };

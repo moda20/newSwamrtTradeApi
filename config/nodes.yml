@@ -6,3 +6,6 @@ rpcNodes:
   - http://localhost:8561
   - http://localhost:8562
   - http://localhost:8563
+exec_node:
+  mainNet: https://speedy-nodes-nyc.moralis.io/9b93e2df8d3932a28ee2b3a4/bsc/mainnet
+

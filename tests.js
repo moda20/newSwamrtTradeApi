@@ -4,7 +4,8 @@ const fs = require('fs');
 
 const WBNBAddress = "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c";
 const singleSwapUrl = [
-    "http://localhost:5000/api/SingleSwap",
+    /*"http://localhost:5000/api/SingleSwap",*/
+    "http://144.91.76.9:3002/api/SingleSwap",
     /*"http://localhost:3002/api/SingleSwap",*/
 ];
 let singleNumber = 0;

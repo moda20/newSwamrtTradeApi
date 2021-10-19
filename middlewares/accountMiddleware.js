@@ -37,7 +37,6 @@ module.exports.openAccount = async (req, res, next) =>{
 
 
 
-
 module.exports.closeAccount = async (req, res, next) =>{
     try{
         const addressToUnlock = req.body.owner ?? res.locals['openUser']?.address;
