@@ -5,7 +5,8 @@ class EndpointResolver {
     static latestEndpoint;
     static currentNumber = 0;
     static execNodes = {};
-    static allNodes = []
+    static allNodes = [];
+    static mustExistNode = null;
 
     static readNodes(){
         try {
@@ -17,11 +18,19 @@ class EndpointResolver {
         }
     }
 
+    static getMustExistEndpoint(){
+        try{
+            const doc = yaml.load(fs.readFileSync(__dirname+"/../config/nodes.yml", 'utf8'));
+            this.mustExistNode = doc?.mustExistNode;
+            return this.mustExistNode;
+        }catch(e){
+            console.log(e)
+        }
+    }
 
-    static getEndpoint = () => {
-        let allNodes = this.allNodes.length === 0 ? this.readNodes() : this.allNodes;
+    static getEndpoint = (endpoints) => {
+        let allNodes = endpoints ?? ( this.allNodes.length === 0 ? this.readNodes() : this.allNodes);
         this.currentNumber ++;
-        console.log(allNodes[this.currentNumber%(allNodes.length)]);
         console.log(allNodes);
         return allNodes[this.currentNumber%(allNodes.length)]
     }

@@ -26,13 +26,14 @@ class DataStore{
             provider: process.env.SMART_TRADE_RPC_ENDPOINT,
             OwnerPassword:process.env.OWNER_ACCOUNT_PRIVATE_KEY_PASSWORD,
             OwnerAddress: process.env.OWNER_ACCOUNT_ACCOUNT,
+            SmartTradeOwnerAddress: process.env.SMART_TRADE_OWNER_ACCOUNT_ACCOUNT,
             WBNBAddress: process.env.WBNB_CONTRACT_ADDRESS,
             PSRAddress: process.env.PANCAKE_ROUTER_CONTRACT_ADDRESS,
             smartTradeAddress: process.env.SMART_TRADE_CONTRACT_ADDRESS
         })
     }
 
-    setVariables({provider, smartTradeAddress, PSRAddress, PSFAddress, WBNBAddress, OwnerAddress, OwnerPassword}){
+    setVariables({provider, smartTradeAddress, PSRAddress, PSFAddress, WBNBAddress, OwnerAddress, OwnerPassword, SmartTradeOwnerAddress}){
         this.provider = provider;
         this.smartTradeContractAddress = smartTradeAddress;
         this.PancakeSwapRouterContractAddress = PSRAddress;
@@ -40,6 +41,7 @@ class DataStore{
         this.WBNBAddress = WBNBAddress
         this.ownerAddress = OwnerAddress
         this.ownerPassword = OwnerPassword
+        this.smartTradeOwnerAddress = SmartTradeOwnerAddress
     }
 
 

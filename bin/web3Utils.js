@@ -2,7 +2,7 @@ const Web3 =require('web3');
 const store = require('../utils/dataStore');
 const logDecoder = require('../utils/logDecoder');
 const endpointResolver = require('../bin/endpointResolver');
-
+const axios = require('axios');
 
 class web3Utils{
 
@@ -30,21 +30,29 @@ class web3Utils{
         }
     }
 
-    populateWeb3Endpoints(){
-        this.multipleEndpoints = endpointResolver.readNodes().map((e)=>{
+    async populateWeb3Endpoints(){
+        let multipleEndpoints = await Promise.all(endpointResolver.readNodes().map(async (e)=>{
             let newWeb3 = new Web3(new Web3.providers.HttpProvider(e));
-           return {
-               provider: e,
-               web3 : newWeb3,
-               PSRouterContract: new newWeb3.eth.Contract(store.readAbi('PSR'), store.PancakeSwapRouterContractAddress, {gas: 20000000000})
-           }
+            let isOpen = await newWeb3.eth.getAccounts().catch(err=>{
+                return null;
+            });
+            if(!isOpen) {
+                return null
+            }
+            return {
+                provider: e,
+                web3 : newWeb3,
+                PSRouterContract: new newWeb3.eth.Contract(store.readAbi('PSR'), store.PancakeSwapRouterContractAddress, {gas: 20000000000})
+            }
 
-        })
+        }))
+        this.multipleEndpoints = multipleEndpoints.filter(e=>!!e);
+        return this.multipleEndpoints;
     }
 
     reloadWeb3AndContracts(){
         this.smartTradecontractAddress = store.smartTradeContractAddress;
-        this.provider = endpointResolver.getEndpoint();
+        this.provider = endpointResolver.getMustExistEndpoint();
         this.web3 = new Web3(new Web3.providers.HttpProvider(this.provider));
         this.PSRouterContract = new this.web3.eth.Contract(store.readAbi('PSR'), store.PancakeSwapRouterContractAddress, {gas: 20000000000});
     }
@@ -108,7 +116,7 @@ class web3Utils{
             receipt.logs = Object.values(receipt?.events)?.map((e)=>{
                 return {
                     ...e,
-                    ['decodedLogs'] : logDecoder.decodeSingleLog(e, this.web3),
+                    ['decodedLogs'] : logDecoder.decodeSingleLog(e, myProvider.web3),
                     ['eventName']: logDecoder.getEventName(e),
                     raw: undefined
                 }
@@ -130,7 +138,7 @@ class web3Utils{
                 withFees,
                 owner,
                 deadline: realDeadline,
-                gasPrice: await this.web3.eth.getGasPrice(),
+                gasPrice: await myProvider.web3.eth.getGasPrice(),
                 provider: myProvider.provider
             }
         }
@@ -153,12 +161,55 @@ class web3Utils{
             input:{
                 amount: amount,
                 owner,
-                gasPrice: await this.web3.eth.getGasPrice(),
+                gasPrice: await myProvider.web3.eth.getGasPrice(),
                 provider: myProvider.provider
             }
         }
     }
 
+
+    async executeSwaps({bnbAmount, pairA, desiredMinimumFinalAmount, pairB,
+                           pairC, minimumProfitNeeded, swapType,
+                           isTesting, noTransaction, testPredict,
+                           tokenPath, gasPrice, gasAmount,
+                           owner, nonce, initialGasCost, provider}){
+
+        let smartTradeContract = new provider.web3.eth.Contract(store.readAbi('smartTrade'), store.smartTradeContractAddress);
+
+        let txHash = await smartTradeContract.methods.executeSwaps(
+            bnbAmount, this.CHK(pairA), desiredMinimumFinalAmount,
+            this.CHK(pairB), this.CHK(pairC), initialGasCost ?? 0,
+            minimumProfitNeeded, swapType, isTesting, false,
+            tokenPath.map(e=>this.CHK(e))
+        ).send({
+            from: this.CHK(owner),
+            gas: gasAmount,
+            gasPrice: gasPrice,
+            nonce: nonce ?? await provider.web3.eth.getTransactionCount(owner)
+        })
+        let receipt = txHash;
+        return {
+            receipt,
+            input:{
+                'transactionData': {
+                    'bnbAmount': bnbAmount,
+                    'tokenA': this.CHK(pairA),
+                    'minimumDesiredAmount': desiredMinimumFinalAmount,
+                    'tokenB': this.CHK(pairB),
+                    'tokenC': this.CHK(pairC),
+                    'initialGasCost': initialGasCost,
+                    'minimumProfitNeeded': minimumProfitNeeded,
+                    'swapType': swapType,
+                    'isTesting': isTesting,
+                    'tokenPath': tokenPath.map(e=>this.CHK(e)),
+                    'gasPrice': gasPrice,
+                    'gasAmountMax': gasAmount
+                },
+                'nonce': nonce
+            }
+        }
+
+    }
 
     async getBalanceOfToken({owner, tokenList = [], provider}){
        return await Promise.allSettled(tokenList.map(async (token)=>{
@@ -172,6 +223,15 @@ class web3Utils{
         })).then((dataArray)=>dataArray.reduce((p,c)=>{
             return {...p, ...c.value}
         },{}))
+    }
+
+
+    transferETH({owner, to, amount, provider}){
+        return provider?.web3.eth.sendTransaction({
+            from: owner,
+            to,
+            value: amount ?? provider.web3.utils.toWei('23', "ether")
+        })
     }
 
 

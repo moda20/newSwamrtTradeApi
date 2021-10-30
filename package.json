@@ -13,6 +13,7 @@
     "dotenv": "^10.0.0",
     "eth-revert-reason": "^1.0.3",
     "express": "~4.16.1",
+    "ganache-core": "^2.13.2",
     "http-errors": "~1.6.3",
     "jade": "~1.11.0",
     "js-yaml": "^4.1.0",
@@ -20,7 +21,7 @@
     "morgan": "~1.9.1",
     "mysql2": "^2.3.0",
     "sequelize": "^6.6.5",
-    "web3": "^1.5.2"
+    "web3": "1.5.3"
   },
   "devDependencies": {
     "nodemon": "^2.0.12",
