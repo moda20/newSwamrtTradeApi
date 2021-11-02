@@ -2,9 +2,12 @@ const web3Utils = require('../bin/web3Utils');
 const middlewares = require('../middlewares/accountMiddleware');
 const tokenControllers = require('../controllers/tokenController');
 const store = require('../utils/dataStore')
+const {pancakeSwap} = require('../repositories');
+
 
 module.exports = function (router) {
     router.post('/SingleSwap', middlewares.openAccount, async (req, res, next) => {
+        let earlyReserves = {};
         try {
             const {minimumAmountOut, amount, path, withFees, owner, deadline, toAddress, dryRun} = req.body;
             const {address} = res.locals.openUser;
@@ -13,7 +16,32 @@ module.exports = function (router) {
                     amount: amount ?? 0,
                     owner: owner ?? address,
                     provider: res.newProvider
-                })
+                });
+                if(path && path?.length !== 0){
+                    let reserves = await Promise.all(path.map((e,i)=>{
+                        if(path.length === 2 && i >= 1){
+                            return null
+                        }
+                        if(e === (i+1 >= path.length ? path[0] : path[i+1])) return null;
+                        return [e, (i+1 >= path.length ? path[0] : path[i+1])]
+                    }).filter(e=>!!e).map(async (couple)=>{
+                        let pairAddress = await pancakeSwap.getPairAddress(couple, {provider: res.newProvider});
+                        return pancakeSwap.getPairReserves(pairAddress, {provider: res.newProvider}).then((reserves) => ({
+                            reserves: {
+                                reserve0: reserves._reserve0,
+                                reserve1: reserves._reserve1,
+                                timestamp: reserves._blockTimestampLast,
+                                path: couple
+                            },
+                            pairAddress: pairAddress
+                        }));
+                    }));
+
+                    earlyReserves = reserves.reduce((prev, curr) => {
+                        prev[curr.pairAddress] = curr.reserves;
+                        return prev;
+                    }, {})
+                }
             }
             let transactionData = await web3Utils.swapBetween({
                 minimumAmountOut: minimumAmountOut ?? 0,
@@ -26,12 +54,16 @@ module.exports = function (router) {
                 provider: res.newProvider
             })
 
-            res.status(200).json(transactionData);
+            res.status(200).json({
+                ...transactionData,
+                earlyReserves
+            });
 
             next();
         } catch (err) {
             err['providerData'] = {
-                provider: res.newProvider.provider
+                provider: res.newProvider.provider,
+                earlyReserves
             }
             next(err)
         }
@@ -102,6 +134,7 @@ module.exports = function (router) {
     })
 
     router.post('/dryExecute', middlewares.openAccount, async (req, res, next) => {
+        let earlyReserves = {};
         try {
             const {
                 bnbAmount,
@@ -130,7 +163,33 @@ module.exports = function (router) {
                     amount: bnbAmount ?? 0,
                     owner: owner ?? address,
                     provider: res.newProvider
-                })
+                });
+
+                if(tokenPath && tokenPath?.length !== 0){
+                    let reserves = await Promise.all(tokenPath.map((e,i)=>{
+                        if(tokenPath.length === 2 && i >= 1){
+                            return null
+                        }
+                        if(e === (i+1 >= tokenPath.length ? tokenPath[0] : tokenPath[i+1])) return null;
+                        return [e, (i+1 >= tokenPath.length ? tokenPath[0] : tokenPath[i+1])]
+                    }).filter(e=>!!e).map(async (couple)=>{
+                        let pairAddress = await pancakeSwap.getPairAddress(couple, {provider: res.newProvider});
+                        return pancakeSwap.getPairReserves(pairAddress, {provider: res.newProvider}).then((reserves) => ({
+                            reserves: {
+                                reserve0: reserves._reserve0,
+                                reserve1: reserves._reserve1,
+                                timestamp: reserves._blockTimestampLast,
+                                tokenPath: couple
+                            },
+                            pairAddress: pairAddress
+                        }));
+                    }));
+
+                    earlyReserves = reserves.reduce((prev, curr) => {
+                        prev[curr.pairAddress] = curr.reserves;
+                        return prev;
+                    }, {})
+                }
             }
             let fundingReceipt = await web3Utils.transferETH({owner: address, to:store.smartTradeOwnerAddress, provider: res.newProvider });
             let transactionData = await web3Utils.executeSwaps(
@@ -155,12 +214,16 @@ module.exports = function (router) {
                 }
             )
 
-            res.status(200).json(transactionData);
+            res.status(200).json({
+                ...transactionData,
+                earlyReserves
+            });
 
             next();
         } catch (err) {
             err['providerData'] = {
-                provider: res.newProvider.provider
+                provider: res.newProvider.provider,
+                earlyReserves
             }
             next(err)
         }

@@ -12,7 +12,7 @@ class DataStore{
         this.provider = process.env.SMART_TRADE_RPC_ENDPOINT;
         this.smartTradeContractAddress = process.env.SMART_TRADE_CONTRACT_ADDRESS;
         this.PancakeSwapRouterContractAddress = process.env.PANCAKE_ROUTER_CONTRACT_ADDRESS;
-        this.PancakeSwapFactoryContractAddress ="";
+        this.PancakeSwapFactoryContractAddress = process.env.PANCAKE_FACOTRY_CONTRACT_ADDRESS;
         this.WBNBAddress = process.env.WBNB_CONTRACT_ADDRESS
         this.ownerAddress = process.env.OWNER_ACCOUNT_ACCOUNT
         this.ownerPassword = process.env.OWNER_ACCOUNT_PRIVATE_KEY_PASSWORD;
@@ -29,11 +29,12 @@ class DataStore{
             SmartTradeOwnerAddress: process.env.SMART_TRADE_OWNER_ACCOUNT_ACCOUNT,
             WBNBAddress: process.env.WBNB_CONTRACT_ADDRESS,
             PSRAddress: process.env.PANCAKE_ROUTER_CONTRACT_ADDRESS,
-            smartTradeAddress: process.env.SMART_TRADE_CONTRACT_ADDRESS
+            smartTradeAddress: process.env.SMART_TRADE_CONTRACT_ADDRESS,
+            PSFAddress: process.env.PANCAKE_FACOTRY_CONTRACT_ADDRESS
         })
     }
 
-    setVariables({provider, smartTradeAddress, PSRAddress, PSFAddress, WBNBAddress, OwnerAddress, OwnerPassword, SmartTradeOwnerAddress}){
+    setVariables({provider, smartTradeAddress, PSRAddress, PSFAddress, WBNBAddress, OwnerAddress, OwnerPassword, SmartTradeOwnerAddress, smartTrae}){
         this.provider = provider;
         this.smartTradeContractAddress = smartTradeAddress;
         this.PancakeSwapRouterContractAddress = PSRAddress;

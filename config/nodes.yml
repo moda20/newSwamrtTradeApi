@@ -1,11 +1,12 @@
 rpcNodes:
-  - http://localhost:8557
-  - http://localhost:8556
-  - http://localhost:8558
-  - http://localhost:8560
-  - http://localhost:8561
-  - http://localhost:8562
-  - http://localhost:8563
+  - http://localhost:8555
+#  - http://localhost:8556
+#  - http://localhost:8558
+#  - http://localhost:8560
+#  - http://localhost:8561
+#  - http://localhost:8562
+#  - http://localhost:8563
+must_exist_node: https://speedy-nodes-nyc.moralis.io/9b93e2df8d3932a28ee2b3a4/bsc/mainnet
 exec_node:
   mainNet: https://speedy-nodes-nyc.moralis.io/9b93e2df8d3932a28ee2b3a4/bsc/mainnet
 
