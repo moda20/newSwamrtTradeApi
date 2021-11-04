@@ -12,5 +12,14 @@ module.exports = {
         console.log(store.PancakeSwapFactoryContractAddress);
         let contract =  new provider.web3.eth.Contract(store.readAbi('PSF'), store.PancakeSwapFactoryContractAddress);
         return contract.methods.getPair(pairPath[0], pairPath[1]).call()
+    },
+    getCouplesFromPathList: (pathList = []) => {
+        return pathList.map((e,i)=>{
+            if(pathList.length === 2 && i >= 1){
+                return null
+            }
+            if(e === (i+1 >= pathList.length ? pathList[0] : pathList[i+1])) return null;
+            return [e, (i+1 >= pathList.length ? pathList[0] : pathList[i+1])]
+        }).filter(e=>!!e)
     }
 }
