@@ -9,6 +9,7 @@ COPY . .
 COPY .env /home/node/app/.env
 RUN npm install
 RUN npm install -g nodemon
+RUN npm install pm2 -g
 
 EXPOSE 3000
-CMD ["nodemon"]
+CMD ["pm2-runtime", "process.yml"]

@@ -21,5 +21,20 @@ module.exports = {
             if(e === (i+1 >= pathList.length ? pathList[0] : pathList[i+1])) return null;
             return [e, (i+1 >= pathList.length ? pathList[0] : pathList[i+1])]
         }).filter(e=>!!e)
+    },
+    getTaxesWithBNB: async ({tokenAddressList = [], web3, decimals, valueIn = 1000000000000000000}) => {
+        const fees = [], errors = [];
+        async function run(address) {
+            await getMaxes(address);
+            return await honeypotIs(address).then((res)=>{return res});
+        }
+        for (let token of tokenAddressList) {
+            await run(token).then((res)=>{
+                if(!res.error)
+                    fees.push(res)
+                else
+                    errors.push(res)
+            });
+        }
     }
 }

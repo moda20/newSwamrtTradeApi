@@ -1,4 +1,5 @@
 const ganache = require("ganache-core");
+const ganacheAlpha = require("ganache");
 const store = require('../utils/dataStore');
 const web3 = require("web3");
 
@@ -6,6 +7,7 @@ const web3 = require("web3");
 
 module.exports={
     createNewDryProvider: ({blockNumber, unlockedAddresses= []}) => {
+        console.log(process.env.SOURCE_CHAIN_RPC_ENDPOINT);
         const options = {
             accounts:[
                 {
@@ -15,11 +17,11 @@ module.exports={
             ],
             fork:`${process.env.SOURCE_CHAIN_RPC_ENDPOINT}${blockNumber?'@'+blockNumber: ''}`,
             unlocked_accounts:[...(unlockedAddresses ?? []), store.smartTradeOwnerAddress],
-            gasLimit: "80000000000",
+            gasLimit: 80000000000,
             default_balance_ether: 1000000000000,
             port:8999
         };
-        const provider = ganache.provider(options);
+        const provider = ganacheAlpha.provider(options);
         return new web3(provider);
     }
 }
