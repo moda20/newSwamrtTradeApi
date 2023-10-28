@@ -55,14 +55,14 @@ Access the API endpoints to perform dry runs and run swaps.
 
 ### API Endpoints
 
-POST /api/SingleSwap: Perform a single swap with the possibility of running a dry run, or multiple consecutive swaps including many token hops.
-POST /api/depositWBNB: Deposit WBNB a standard ERC20 token with a ratio of 1 to 1 with BNB (can be used really for any tokens like WETH).
-POST /api/getBalance: returns the balance of a user in a specific token 
-POST /api/getAmountsOut: Calculates the amountsOut of a swap based on a list of swap tokens
-POST /api/getAmountsIn: Calculates the amountsIn of a swap based on a list of swap tokens
-POST /api/dryExecute: Execute a list of swaps based on a token Path with the goal of acquiring a minimum of profit (arbitrage based)
-POST /api/reserves: read the reserves from the local database for all tokens
-
+* POST /api/SingleSwap: Perform a single swap with the possibility of running a dry run, or multiple consecutive swaps including many token hops.
+* POST /api/depositWBNB: Deposit WBNB a standard ERC20 token with a ratio of 1 to 1 with BNB (can be used really for any tokens like WETH).
+* POST /api/getBalance: returns the balance of a user in a specific token 
+* POST /api/getAmountsOut: Calculates the amountsOut of a swap based on a list of swap tokens
+* POST /api/getAmountsIn: Calculates the amountsIn of a swap based on a list of swap tokens
+* POST /api/dryExecute: Execute a list of swaps based on a token Path with the goal of acquiring a minimum of profit (arbitrage based)
+* POST /api/reserves: read the reserves from the local database for all tokens
+* 
 ### Contributing
 If you would like to contribute to this project, please open pull requests with descriptions or start by creating an issue.
 
