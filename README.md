@@ -62,7 +62,8 @@ Access the API endpoints to perform dry runs and run swaps.
 * POST /api/getAmountsIn: Calculates the amountsIn of a swap based on a list of swap tokens
 * POST /api/dryExecute: Execute a list of swaps based on a token Path with the goal of acquiring a minimum of profit (arbitrage based)
 * POST /api/reserves: read the reserves from the local database for all tokens
-* 
+
+
 ### Contributing
 If you would like to contribute to this project, please open pull requests with descriptions or start by creating an issue.
 
@@ -70,8 +71,8 @@ If you would like to contribute to this project, please open pull requests with 
 This project is licensed under the MIT License.
 
 ### Links
-[Uniswap V2](https://uniswap.org/)
-[Ganache](https://www.trufflesuite.com/ganache)
+* [Uniswap V2](https://uniswap.org/)
+* [Ganache](https://www.trufflesuite.com/ganache)
 
 
 ### Contact
