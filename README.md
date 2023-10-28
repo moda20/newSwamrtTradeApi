@@ -40,8 +40,8 @@ npm install
 
 The configuration file config/node.yml allows you to specify the following settings:
 
-rpcNodes: Number of nodes to start with the server.
-exec_node: nodes to run actual live transactions (not dry run).
+- rpcNodes: Number of nodes to start with the server.
+- exec_node: nodes to run actual live transactions (not dry run).
 
 ### Usage
 
