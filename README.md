@@ -1,7 +1,7 @@
 # Uniswap V2 Dry Run API Server
 
 The Uniswap V2 Dry Run API Server is a Node.js Express.js application that allows you to perform dry runs of Uniswap V2
-calls on forked networks using Ganache. It also enables you to run multiple swaps with custom configurations.
+swaps on forked networks using Ganache. It also enables you to run multiple swaps with custom configurations.
 Additionally, you can select the target node and specify from which block to fork.
 
 ## Features
