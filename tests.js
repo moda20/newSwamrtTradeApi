@@ -5,7 +5,6 @@ const fs = require('fs');
 const WBNBAddress = "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c";
 const singleSwapUrl = [
     /*"http://localhost:5000/api/SingleSwap",*/
-    "http://144.91.76.9:3002/api/SingleSwap",
     /*"http://localhost:3002/api/SingleSwap",*/
 ];
 let singleNumber = 0;
@@ -570,7 +569,7 @@ const singleSwap = (path, Prefix, provider) =>{
     }).catch((err)=>{
         let currentProvider = err?.response?.data?.extraData?.provider;
         console.log(err?.response?.data);
-        console.log(`${Prefix} => ${currentProvider} : ERRORRRR between ${path[0]} and token ${path[1]} timing : ${err.duration}`);
+        console.log(`${Prefix} => ${currentProvider} : Error between ${path[0]} and token ${path[1]} timing : ${err.duration}`);
         repeats[path[1]] = {
             failed: (repeats[path[1]]?.failed ?? 0) +1,
             retry: (repeats[path[1]]?.failed ?? 0) < 3,
@@ -588,5 +587,3 @@ const singleSwap = (path, Prefix, provider) =>{
 
 computeSingleSwaps("T ONE", 0, 2, null, 0);
 computeSingleSwaps("T TWO", 1, 2, null, 1);
-/*computeSingleSwaps("T THREE");
-computeSingleSwaps("T FOUR");*/
