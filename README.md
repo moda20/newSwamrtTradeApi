@@ -23,13 +23,13 @@ Before getting started, make sure you have the following installed:
 1. Clone the project repository:
 
 ```bash
-git clone https://github.com/yourusername/uniswap-dry-run-api-server.git
+git clone https://github.com/moda20/newSwamrtTradeApi.git
 ```
 
 Change to the project directory:
 
 ```bash
-cd uniswap-dry-run-api-server
+cd newSwamrtTradeApi
 ```
 Install the project dependencies:
 
